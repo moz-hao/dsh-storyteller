@@ -121,3 +121,39 @@ test('defaultSession stays the source of truth for an untouched session', () => 
   assert.equal(record.tavern.statusBar, true)
   assert.equal(record.tavern.dice, false)
 })
+
+test('the definition works without the host defineTool helper', () => {
+  const s = store()
+  s.update('session-1', (record) => {
+    record.tavern.on = true
+  })
+  const definition = createStoryStateTool({ store: s })
+  assert.equal(definition.name, 'story_state')
+  // Raw JSON Schema, because the registry never needed the DSL.
+  assert.equal(definition.parameters.type, 'object')
+  assert.deepEqual(definition.parameters.required, ['action'])
+  assert.deepEqual(definition.parameters.properties.action.enum, ['read', 'patch'])
+  assert.equal(definition.parameters.properties.relations.type, 'array')
+  assert.deepEqual(definition.parameters.properties.relations.items.required, ['name'])
+  assert.equal(definition.output.schema.type, 'object')
+  assert.equal(definition.output.schema.additionalProperties, true)
+  assert.equal(typeof definition.output.render, 'function')
+
+  const value = definition.execute({ action: 'patch', scene: '雨夜' }, exec('session-1'))
+  assert.equal(value.ok, true)
+  assert.equal(s.get('session-1').tavern.scene, '雨夜')
+  const rendered = definition.output.render({ action: 'read' }, value)
+  assert.match(rendered[0].text, /雨夜/)
+})
+
+test('the fallback refuses bad arguments instead of writing them', () => {
+  const s = store()
+  s.update('session-1', (record) => {
+    record.tavern.on = true
+  })
+  const definition = createStoryStateTool({ store: s })
+  const value = definition.execute({ action: 'patch', memory: 'not-an-array', relations: [{}] }, exec('session-1'))
+  assert.equal(value.ok, true)
+  assert.deepEqual(s.get('session-1').tavern.memory, [])
+  assert.deepEqual(s.get('session-1').tavern.relations, {})
+})

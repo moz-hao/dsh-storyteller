@@ -149,3 +149,14 @@ test('the bridge never writes outside its state file', () => {
   host.commands.get('story').handler({ agent: { session: { id: 'session-a' } }, rawInput: '' })
   assert.equal(fs.existsSync(statePath), false)
 })
+
+test('story_state is registered without the host defineTool helper', () => {
+  const { host } = mounted()
+  const entry = host.tools.get('story_state')
+  assert.notEqual(entry, undefined)
+  assert.equal(entry.definition.parameters.type, 'object')
+  assert.equal(typeof entry.options.when, 'function')
+  assert.equal(entry.options.when({ agent: { session: { id: 'session-off' } } }), false)
+  host.commands.get('tavern').handler({ agent: { session: { id: 'session-on' } }, rawInput: ' on' })
+  assert.equal(entry.options.when({ agent: { session: { id: 'session-on' } } }), true)
+})

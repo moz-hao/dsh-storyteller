@@ -1,5 +1,15 @@
 # 更新日志
 
+## 0.2.1 — 2026-11-09
+
+### 修复
+- **装进 profile 后 `story_state` 工具会静默消失**：旧实现用裸 `import('@deepseek-ai/dsh-tools')` 取 `defineTool`，而本包并不依赖它、宿主的副本也不在插件的模块解析路径上（profile 里是 junction + pnpm 虚拟store），导入失败只会吞成一条 `warn`。现在工具定义改为**手写原始 JSON Schema 同步注册**，`defineTool` 变成可选增强：解析得到就用它做参数校验，解析不到也照常注册。原始 schema 已用宿主自己的 `assertSupportedJsonSchema` / `validateJsonSchemaValue` 验过，坏参数（`action` 非法、`memory` 不是数组、`relations` 缺 `name`）都会被挡下。
+- 注册从 promise 里挪到 `apply` 同步路径，挂载失败会在插件行状态上暴露，而不是只留一行日志。
+
+### 工程
+- 用例 68 → **71**：新增「无 `defineTool` 也能构造并执行工具」「坏参数不写入」「伪造 host 下工具确实注册且 `when` 生效」。
+- 版本 0.2.0 → 0.2.1。
+
 ## 0.2.0 — 2026-11-09
 
 ### 新增
