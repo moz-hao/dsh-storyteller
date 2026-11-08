@@ -1,6 +1,6 @@
 {
   "name": "dsh-storyteller",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "说书人：DeepSeek Harness 插件，按会话开启「说人话」与「酒馆模式」（角色卡 / 人设 / 状态条 / 骰子 / 场景记忆持久化）。",
   "type": "module",
   "main": "lib/index.js",

@@ -150,6 +150,15 @@ test('the bridge never writes outside its state file', () => {
   assert.equal(fs.existsSync(statePath), false)
 })
 
+test('the slash hint advertises every shipped subcommand', () => {
+  const { host } = mounted()
+  const hint = host.commands.get('tavern').input.hint
+  for (const word of ['erotic', 'choices', 'statusbar', 'dice', 'setup', 'lang', 'card', 'memory', 'relation', 'style', 'reset', 'preview', 'status']) {
+    assert.ok(hint.includes(word), `hint is missing "${word}": ${hint}`)
+  }
+  assert.ok(host.commands.get('plain').input.hint.includes('lang'))
+})
+
 test('story_state is registered without the host defineTool helper', () => {
   const { host } = mounted()
   const entry = host.tools.get('story_state')
