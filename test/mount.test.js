@@ -169,3 +169,37 @@ test('story_state is registered without the host defineTool helper', () => {
   host.commands.get('tavern').handler({ agent: { session: { id: 'session-on' } }, rawInput: ' on' })
   assert.equal(entry.options.when({ agent: { session: { id: 'session-on' } } }), true)
 })
+
+test('switching a run on also enqueues the director note, so the turn starts', () => {
+  const { host } = mounted()
+  const queued = []
+  const agent = { session: { id: 'session-kick' }, followup: (message) => queued.push(message) }
+
+  host.commands.get('tavern').handler({ agent, rawInput: ' on' })
+  assert.equal(queued.length, 1)
+  assert.match(queued[0].content[0].text, /设定/)
+  assert.equal(queued[0].source.kind, 'user')
+
+  // Already on: a second toggle must not spam the transcript.
+  host.commands.get('tavern').handler({ agent, rawInput: ' on' })
+  assert.equal(queued.length, 1)
+
+  // Read-only subcommands never start a turn.
+  host.commands.get('tavern').handler({ agent, rawInput: ' status' })
+  host.commands.get('plain').handler({ agent, rawInput: ' on' })
+  assert.equal(queued.length, 1)
+})
+
+test('a tavern subcommand that auto-enables also kicks the run off', () => {
+  const { host } = mounted()
+  const queued = []
+  const agent = { session: { id: 'session-kick2' }, followup: (message) => queued.push(message) }
+  host.commands.get('tavern').handler({ agent, rawInput: ' erotic on' })
+  assert.equal(queued.length, 1)
+})
+
+test('a host without followup still works', () => {
+  const { host } = mounted()
+  const result = host.commands.get('tavern').handler({ agent: { session: { id: 'session-nofollow' } }, rawInput: ' on' })
+  assert.equal(result.kind, 'success')
+})
