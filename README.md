@@ -166,7 +166,7 @@ dsh --profile desktop --dump-config | Select-String storyteller
 <profile>/plugin-data/dsh-storyteller/state.json
 ```
 
-Windows 上通常是 `C:\Users\<你>\.dsh\profiles\desktop\plugin-data\dsh-storyteller\state.json`。按 `sessionId` 分键，形如：
+路径由宿主自己的 `profileContext.dir` 决定（`<profile>/plugin-data/dsh-storyteller/state.json`），Windows 上通常是 `C:\Users\<你>\.dsh\profiles\desktop\plugin-data\dsh-storyteller\state.json`；`profiles/default` 下的旧文件会在启动时一次性迁移过去。按 `sessionId` 分键，形如：
 
 ```json
 {
@@ -210,6 +210,7 @@ Windows 上通常是 `C:\Users\<你>\.dsh\profiles\desktop\plugin-data\dsh-story
 | 现象 | 处理 |
 |---|---|
 | 命令列表里没有 `/plain` | 插件没挂上：`dsh --profile <名字> --dump-config` 看有没有 `storyteller` 行，装完是否重启过 |
+| 敲了 `/tavern erotic on` 毫无反应 | 命令必须**行首**带 `/`；客户端斜杠菜单是**按会话缓存**的，刚装完/刚重启时先输入 `/` 等菜单加载完再回车（菜单没热时回车会被静默丢弃）。会话日志里有 `command/run` 就说明已经到宿主了 |
 | 开了酒馆但一直不弹设定卡片 | `/tavern status` 看「设定」是否「待确认」；`/tavern preview` 看提示词里有没有「开局先补齐设定」 |
 | 没有选项卡片 | `/tavern choices on`；确认 `ask_user_question` 工具在这个 preset 里可用 |
 | 说人话自己没了 | 开酒馆会打开它，关掉酒馆不会关它；要关自己敲 `/plain off` |
@@ -227,7 +228,7 @@ cd D:\deepseek\chat\dsh-storyteller
 node --test
 ```
 
-75 条用例：存储读改写与重载、坏文件降级、会话隔离、提示词只在开启时非空、全部命令语法（含「被拒绝的写入不改文件」）、酒馆联动说人话、设定待确认/已确认、选项卡片开关、色情模式、中英双语渲染、伪造 host 挂载后的分节与命令注册、工具条件可见性。
+79 条用例：存储读改写与重载、坏文件降级、会话隔离、提示词只在开启时非空、全部命令语法（含「被拒绝的写入不改文件」）、酒馆联动说人话、设定待确认/已确认、选项卡片开关、色情模式、中英双语渲染、伪造 host 挂载后的分节与命令注册、工具条件可见性。
 
 目录：
 

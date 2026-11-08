@@ -1,5 +1,17 @@
 # 更新日志
 
+## 0.2.3 — 2026-11-09
+
+### 修复
+- **状态写进了 `profiles/default`**：桌面端主进程没有 `DSH_PROFILE_DIR` / `DSH_PROFILE`（那对变量只给工具子进程），旧的解析顺序于是把真实开关落到 `~/.dsh/profiles/default/plugin-data/dsh-storyteller/state.json`，谁都找不到。现在优先用宿主自己的 `profileContext.dir`（`lib/paths.js`），环境变量只作 headless 兜底；`config.statePath` 仍可钉死路径。
+- **一次性迁移**：如果新路径还没有文件、而 `profiles/default` 下有一份，启动时复制过去（只复制不覆盖），老开关不丢。
+- **`/tavern erotic on` 这类子命令在未开启的会话里没反应**：它只写了一个 flag，酒馆模式仍是关的，于是没有提示词、没有工具、看起来毫无动静。现在任何「只在戏里才有意义」的子命令（card/set/memory/relation/statusbar/dice/choices/erotic/setup/rating/style）在关着的会话上执行成功后，会顺带把酒馆模式和说人话打开，并在回执里说明。
+
+### 工程
+- 新增 `lib/paths.js`，把路径解析与迁移拆成可测纯函数。
+- 用例 75 → **79**。
+- 版本 0.2.2 → 0.2.3。
+
 ## 0.2.2 — 2026-11-09
 
 ### 修复

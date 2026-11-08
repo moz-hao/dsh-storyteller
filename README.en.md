@@ -93,7 +93,7 @@ Plain ESM JavaScript, no build step, no runtime dependencies:
 node --test
 ```
 
-75 tests: store read/write/reload, corrupt-file fallback, session isolation,
+79 tests: store read/write/reload, corrupt-file fallback, session isolation,
 prompt gating, full command grammar, tavern-implies-plain, setup pending/done,
 choice cards, erotic mode, bilingual rendering, a fake-host mount, and the
 tool's conditional visibility.
