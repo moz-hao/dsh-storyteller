@@ -1,0 +1,70 @@
+{
+  "name": "dsh-storyteller",
+  "version": "0.1.0",
+  "description": "说书人：DeepSeek Harness 插件，按会话开启「说人话」与「酒馆模式」（角色卡 / 人设 / 状态条 / 骰子 / 场景记忆持久化）。",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": {
+      "default": "./lib/index.js"
+    },
+    "./state": {
+      "default": "./lib/state.js"
+    },
+    "./prompt": {
+      "default": "./lib/prompt.js"
+    },
+    "./grammar": {
+      "default": "./lib/grammar.js"
+    },
+    "./tool": {
+      "default": "./lib/tool.js"
+    },
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "tools",
+    "cordis.patch.yml",
+    "examples",
+    "README.md",
+    "README.en.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test test/",
+    "check": "node --check lib/index.js && node --check lib/state.js && node --check lib/prompt.js && node --check lib/grammar.js && node --check lib/tool.js"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "storyteller",
+    "tavern",
+    "roleplay",
+    "说人话",
+    "酒馆",
+    "网文"
+  ],
+  "author": "YG",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moz-hao/dsh-storyteller.git"
+  },
+  "homepage": "https://github.com/moz-hao/dsh-storyteller#readme",
+  "bugs": {
+    "url": "https://github.com/moz-hao/dsh-storyteller/issues"
+  },
+  "dsh": {
+    "manifestVersion": 1,
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+# dsh-storyteller bundle patch.
+#
+# `dsh plugin --profile <name> add <this package>` reconciles the package into
+# the profile's dsh.profile.bundles, which applies this file after the other
+# bundle layers and before the profile's own cordis.patch.yml.
+#
+# `name` is the PACKAGE to load, so it must match package.json "name".
+# `id` is the loader entry id; it is also the prefix of nothing here (the plugin
+# opens no HTTP route), so any stable id works.
+#
+# No config is required. The row's own defaults are:
+#   statePath: <profile>/plugin-data/dsh-storyteller/state.json
+# Override it only when the sidecar must live elsewhere:
+#
+#   - id: storyteller
+#     name: dsh-storyteller
+#     config:
+#       statePath: D:\dsh-data\storyteller.json
+- insert:
+    - id: storyteller
+      name: dsh-storyteller
