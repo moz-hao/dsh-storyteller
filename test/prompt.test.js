@@ -136,3 +136,21 @@ test('酒馆 carries the goal-obstacle-cost-information plot rule', () => {
   assert.match(text, /每五百字必须有一次局势变化/)
   assert.match(text, /巧合/)
 })
+
+test('the prompt bans coined compounds and demands idiomatic collocations', () => {
+  const text = renderTavern(tavernOn())
+  assert.match(text, /## 用词/)
+  assert.match(text, /空法/)
+  assert.match(text, /蹚水/)
+  assert.match(text, /没睡过一个整觉/)
+  assert.match(text, /宁可土，不要怪/)
+})
+
+test('the prompt demands plot logic: four questions, three checks, four bans', () => {
+  const text = renderTavern(tavernOn())
+  assert.match(text, /写前四问/)
+  assert.match(text, /写后三查/)
+  assert.match(text, /主角光环/)
+  assert.match(text, /信息白给/)
+  assert.match(text, /原地踏步/)
+})
