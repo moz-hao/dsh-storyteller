@@ -121,3 +121,18 @@ test('preview says so when the feature is off', () => {
   assert.match(renderPreview(defaultSession(), 'tavern'), /未开启/)
   assert.match(renderPreview(plainOn(), 'plain'), /说人话/)
 })
+
+test('the novel layer carries the measured sentence-length rules', () => {
+  const novel = renderPlain(plainOn('novel'))
+  assert.match(novel, /二十到三十五字|20–35/)
+  assert.match(novel, /一句一段/)
+  // The plain level must stay free of the fiction layer.
+  assert.equal(renderPlain(plainOn('plain')).includes('一句一段'), false)
+})
+
+test('酒馆 carries the goal-obstacle-cost-information plot rule', () => {
+  const text = renderTavern(tavernOn())
+  assert.match(text, /目标—阻碍—代价—新信息/)
+  assert.match(text, /每五百字必须有一次局势变化/)
+  assert.match(text, /巧合/)
+})
