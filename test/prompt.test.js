@@ -130,27 +130,43 @@ test('the novel layer carries the measured sentence-length rules', () => {
   assert.equal(renderPlain(plainOn('plain')).includes('一句一段'), false)
 })
 
-test('酒馆 carries the goal-obstacle-cost-information plot rule', () => {
+test('酒馆 keeps the plot rules: four questions, escalation, variation', () => {
   const text = renderTavern(tavernOn())
-  assert.match(text, /目标—阻碍—代价—新信息/)
-  assert.match(text, /每五百字必须有一次局势变化/)
-  assert.match(text, /巧合/)
+  assert.match(text, /写前四问/)
+  assert.match(text, /每回合局势必须变一次/)
+  assert.match(text, /冲突升级/)
+  assert.match(text, /巧合解围/)
 })
 
-test('the prompt bans coined compounds and demands idiomatic collocations', () => {
+test('the prompt bans coined compounds with cross-genre examples', () => {
   const text = renderTavern(tavernOn())
   assert.match(text, /## 用词/)
-  assert.match(text, /空法/)
-  assert.match(text, /蹚水/)
-  assert.match(text, /没睡过一个整觉/)
+  assert.match(text, /那种空法/)
+  assert.match(text, /心跳拉满/)
   assert.match(text, /宁可土，不要怪/)
 })
 
-test('the prompt demands plot logic: four questions, three checks, four bans', () => {
+test('the prompt is scene-neutral: no proper nouns from any sample scene', () => {
+  // An empty run isolates the rule text from whatever card the session carries.
+  const bare = defaultSession()
+  bare.tavern.on = true
+  const text = renderTavern(bare)
+  for (const anchor of ['阿七', '艾琳', '枯灵谷', '玄阙宗', '苦丁茶', '蹚水']) {
+    assert.equal(text.includes(anchor), false, `prompt still anchors on "${anchor}"`)
+  }
+})
+
+test('consistency rules cover viewpoint, address, era vocabulary and numbers', () => {
   const text = renderTavern(tavernOn())
-  assert.match(text, /写前四问/)
-  assert.match(text, /写后三查/)
-  assert.match(text, /主角光环/)
-  assert.match(text, /信息白给/)
-  assert.match(text, /原地踏步/)
+  assert.match(text, /## 一致/)
+  assert.match(text, /视角/)
+  assert.match(text, /称谓统一/)
+  assert.match(text, /时代与世界观词表/)
+  assert.match(text, /数字与单位统一/)
+})
+
+test('prose rules apply to narration only, never to dialogue', () => {
+  const text = renderTavern(tavernOn())
+  assert.match(text, /只管\*\*叙述段\*\*/)
+  assert.match(text, /对白按人物自己的说话习惯写/)
 })
